@@ -1,0 +1,118 @@
+/* SECTION KOTLIN TEACHER THEME */
+:root {
+    --bg-gradient: radial-gradient(circle at top right, #2e004f, #10002b);
+    --pink-accent: #ff00ff;
+    --violet-accent: #8a2be2;
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    background: var(--bg-gradient);
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--white);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.auth-section {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    padding: 70px 60px;
+    border-radius: 40px;
+    text-align: center;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Branding & Title */
+.section-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+.k-logo { height: 35px; }
+.k-text { letter-spacing: 4px; font-weight: 800; font-size: 0.8rem; opacity: 0.7; }
+
+h1 { font-size: 3rem; line-height: 1.1; margin: 0 0 45px 0; font-weight: 700; }
+h1 span { color: var(--pink-accent); }
+
+/* Input Styling with Toggle Icon */
+.input-wrapper {
+    background: var(--white);
+    border-radius: 50px;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.input-wrapper input {
+    border: none;
+    padding: 18px 50px 18px 25px; /* Extra padding on right for the icon */
+    border-radius: 50px;
+    width: 100%;
+    outline: none;
+    font-size: 1.1rem;
+    color: #1a0033;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: flex; /* Added for SVG alignment */
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+
+.toggle-password:hover {
+    transform: scale(1.2);
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.enter-btn {
+    background: #fdf5e6;
+    color: #1a0033;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.enter-btn:hover {
+    background: var(--pink-accent);
+    color: white;
+}
+
+.back-selection-btn {
+    background: transparent;
+    color: white;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}

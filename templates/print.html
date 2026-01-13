@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Report - iComlab</title>
+    <style>
+        :root {
+            /* --- BLACK & WHITE THEME VARIABLES --- */
+            --brand-primary: #000000; /* Pure Black for headers/buttons */
+            --brand-accent: #333333;  /* Dark Gray for focus states */
+            --brand-light: #f4f4f4;   /* Light Gray for background areas */
+            --text-dark: #000000;
+            --text-medium: #555555;
+            --border-color: #cccccc;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 40px;
+            background: white;
+            color: var(--text-dark);
+        }
+        
+        /* CONTROLS SECTION */
+        .no-print-zone {
+            background: var(--brand-light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .controls-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-item strong { font-size: 12px; text-transform: uppercase; color: var(--text-medium); }
+
+        select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            min-width: 140px;
+            background: white;
+            color: var(--text-dark);
+        }
+        select:focus { border-color: var(--brand-accent); }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-print { background: var(--brand-primary); color: white; }
+        .btn-print:hover { background: var(--brand-accent); }
+
+        .btn-back { background: white; color: var(--brand-primary); border: 2px solid var(--brand-primary); }
+        .btn-back:hover { background: #e6e6e6; }
+
+        /* REPORT HEADER */
+        .header {
+            text-align: center;
+            border-bottom: 3px solid var(--brand-primary);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            color: var(--brand-primary);
+            text-transform: uppercase;
+            margin: 0 0 5px 0;
+            font-size: 24px;
+        }
+        .header p { margin: 0; color: var(--text-medium); font-size: 14px; }
+
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; }
+        
+        th { 
+            background: var(--brand-primary); 
+            color: white; 
+            padding: 12px; 
+            text-align: left; 
+            font-size: 14px; 
+            text-transform: uppercase; 
+        }
+        
+        td { 
+            padding: 12px; 
+            border-bottom: 1px solid var(--border-color); 
+            font-size: 14px; 
+        }
+        
+        tr:nth-child(even) { background: #f9f9f9; } /* Very light gray for zebra striping */
+
+        /* Status Badges for B&W Print */
+        .status-active { color: black; font-weight: 900; } /* Bold black for active */
+        .status-done { color: #777; font-weight: normal; } /* Medium gray for done */
+        .status-timeout { color: black; font-weight: bold; font-style: italic; }
+
+        @media print {
+            .no-print-zone { display: none; }
+            body { padding: 0; }
+            /* Ensure table headers are printer-friendly gray */
+            th { background: #dddddd !important; color: black !important; border-bottom: 2px solid black; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-zone">
+        <div class="controls-group">
+            <button class="btn btn-back" onclick="window.close()">← Close</button>
+            
+            <div class="filter-item">
+                <strong>Date Range</strong>
+                <select id="dateFilter" onchange="renderTable()">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="recent">Last 7 Days</option>
+                    <option value="all">All Time</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <strong>Teacher</strong>
+                <select id="teacherFilter" onchange="renderTable()">
+                    <option value="all">Show All</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <strong>Section</strong>
+                <select id="sectionFilter" onchange="renderTable()">
+                    <option value="all">Show All</option>
+                </select>
+            </div>
+        </div>
+        
+        <button class="btn btn-print" onclick="window.print()">🖨️ PRINT REPORT</button>
+    </div>
+
+    <div class="header">
+        <h1>iComlab Laboratory Report</h1>
+        <p>Generated on: <span id="currentDate"></span></p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th> 
+                <th>Student ID</th>
+                <th>Teacher</th>
+                <th>Section</th>
+                <th>PC No.</th>
+                <th>Time In ➞ Out</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="print-body"></tbody>
+    </table>
+
+    <script>
+        // Global variable to store fetched data
+        let historyData = [];
+
+        async function init() {
+            document.getElementById('currentDate').innerText = new Date().toLocaleString();
+            
+            try {
+                // --- FETCH DATA FROM PYTHON BACKEND ---
+                // We use 'print_logs' to get everything (even cleared/archived logs)
+                const response = await fetch('/api/print_logs');
+                historyData = await response.json();
+
+                // 1. POPULATE TEACHER FILTER
+                const teacherSelect = document.getElementById('teacherFilter');
+                const teachers = [...new Set(historyData.map(item => item.teacher).filter(t => t))];
+                teachers.forEach(t => {
+                    let opt = document.createElement('option');
+                    opt.value = t; opt.innerText = t;
+                    teacherSelect.appendChild(opt);
+                });
+
+                // 2. POPULATE SECTION FILTER
+                const sectionSelect = document.getElementById('sectionFilter');
+                const sections = [...new Set(historyData.map(item => item.section).filter(s => s))];
+                sections.forEach(s => {
+                    let opt = document.createElement('option');
+                    opt.value = s; opt.innerText = s;
+                    sectionSelect.appendChild(opt);
+                });
+
+                // 3. RENDER TABLE INITIALLY
+                renderTable();
+
+            } catch (error) {
+                console.error("Failed to fetch logs:", error);
+                document.getElementById('print-body').innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:red;">Error loading data from server.</td></tr>';
+            }
+        }
+
+        function renderTable() {
+            const dateFilter = document.getElementById('dateFilter').value;
+            const teacherFilter = document.getElementById('teacherFilter').value;
+            const sectionFilter = document.getElementById('sectionFilter').value;
+            
+            const tbody = document.getElementById('print-body');
+            tbody.innerHTML = '';
+
+            // Helper to handle dates (removes time component for accurate day comparison)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); 
+            
+            const msInDay = 24 * 60 * 60 * 1000;
+
+            const filteredData = historyData.filter(item => {
+                // FILTER 1: TEACHER
+                if (teacherFilter !== 'all' && item.teacher !== teacherFilter) return false;
+
+                // FILTER 2: SECTION
+                if (sectionFilter !== 'all' && item.section !== sectionFilter) return false;
+
+                // FILTER 3: DATE
+                if (!item.date) return dateFilter === 'all';
+                
+                // Convert string date (YYYY-MM-DD) to Date object
+                const itemDate = new Date(item.date);
+                itemDate.setHours(0, 0, 0, 0); // Normalize time
+                
+                const diffTime = today.getTime() - itemDate.getTime();
+                const diffDays = diffTime / msInDay;
+
+                if (dateFilter === 'today') return diffDays === 0;
+                if (dateFilter === 'yesterday') return diffDays === 1;
+                if (dateFilter === 'recent') return diffDays <= 7;
+                
+                return true; 
+            });
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:20px; color:#666;">No records found matching these filters.</td></tr>';
+                return;
+            }
+
+            filteredData.forEach(item => {
+                let statusClass = 'status-done';
+                if(item.status === 'Active') statusClass = 'status-active';
+                if(item.status === 'Timeout') statusClass = 'status-timeout';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.date || '---'}</td>
+                        <td>${item.id}</td>
+                        <td>${item.teacher || '---'}</td>
+                        <td>${item.section || '---'}</td>
+                        <td>PC-${item.pc}</td>
+                        <td>${item.timeIn} ${item.timeOut && item.timeOut !== '-' ? '➞ ' + item.timeOut : ''}</td>
+                        <td><span class="${statusClass}">${item.status}</span></td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>

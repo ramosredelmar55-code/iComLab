@@ -1,0 +1,119 @@
+/* SECTION KOTLIN LOGOUT STYLING */
+:root {
+    --bg-gradient: linear-gradient(135deg, #2e004f 0%, #10002b 100%);
+    --violet-badge: #b026ff; /* Bright purple for badges */
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-gradient);
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--white);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+}
+
+.nav-links a {
+    color: var(--white);
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 0.9rem;
+}
+
+.nav-links a.active {
+    border-bottom: 2px solid var(--white);
+    padding-bottom: 5px;
+}
+
+/* Layout */
+.logout-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 120px;
+    height: 80vh;
+}
+
+/* 3-Field Input Section */
+.input-section {
+    width: 400px;
+}
+
+.input-wrapper {
+    background: var(--white);
+    border-radius: 50px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 10px; /* Space for the badge on the left */
+}
+
+.input-wrapper input {
+    width: 80%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    outline: none;
+    color: #555;
+}
+
+/* Purple Badges on the Left */
+.badge {
+    background: var(--violet-badge);
+    color: var(--white);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    flex-shrink: 0;
+    box-shadow: 0 0 10px rgba(176, 38, 255, 0.5);
+}
+
+/* Branding Content */
+.section-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.k-logo {
+    height: 30px;
+}
+
+.k-text {
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+}
+
+h1 {
+    font-size: 5rem;
+    margin: 0 0 30px 0;
+}
+
+/* Enter Button */
+.enter-btn {
+    background: #fdf5e6; /* Off-white color from image */
+    color: #10002b;
+    padding: 12px 60px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+}

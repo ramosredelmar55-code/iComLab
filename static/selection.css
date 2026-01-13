@@ -1,0 +1,140 @@
+/* SECTION KOTLIN THEME */
+:root {
+    --bg-gradient: radial-gradient(circle at top right, #2e004f, #10002b);
+    --pink-accent: #ff00ff;
+    --violet-accent: #8a2be2;
+    --white: #ffffff;
+}
+
+body {
+    margin: 0;
+    background: var(--bg-gradient);
+    font-family: 'Segoe UI', sans-serif;
+    color: var(--white);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Navbar Links */
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 30px 80px;
+}
+
+.nav-links a {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    margin-left: 35px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.nav-links a.active, .nav-links a:hover {
+    color: white;
+}
+
+/* Header Section */
+.selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 75vh;
+}
+
+.selection-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.kotlin-tag {
+    letter-spacing: 6px;
+    opacity: 0.6;
+    font-size: 0.8rem;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 4rem;
+    margin: 0;
+}
+
+h1 span {
+    color: var(--pink-accent);
+}
+
+/* Glassmorphism Cards */
+.cards-wrapper {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 50px 40px;
+    width: 320px;
+    min-height: 250px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card:hover {
+    transform: translateY(-15px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--pink-accent);
+    box-shadow: 0 15px 40px rgba(138, 43, 226, 0.3);
+}
+
+.divider {
+    height: 3px;
+    width: 40px;
+    background: var(--pink-accent);
+    margin: 15px auto;
+}
+
+.icon-box img {
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));
+}
+
+.card h2 {
+    font-size: 2rem;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+.card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    opacity: 0.7;
+}
+
+/* Back Button Styling */
+.back-btn {
+    background: transparent;
+    color: white;
+    padding: 12px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.back-btn:hover {
+    background: white;
+    color: #1a0033;
+    border-color: white;
+}

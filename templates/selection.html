@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iComlab - Selection</title>
+    
+    <link rel="stylesheet" href="/static/selection.css">
+
+    <style>
+        body {
+            /* UPDATED: Points to static folder for Image */
+            background-image: url('/static/bg-selection.jpg'); 
+            
+            /* Ensures image covers the whole screen */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            
+            /* Basic resets */
+            margin: 0;
+            min-height: 100vh;
+            font-family: sans-serif; /* Fallback font */
+        }
+    </style>
+
+</head>
+<body>
+    <div class="main-wrapper">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="selection.html" class="active">Selection</a>
+            </div>
+        </nav>
+
+        <main class="selection-container">
+            <div class="selection-header">
+                <h1>Select your <span>Role</span></h1>
+            </div>
+
+            <div class="cards-wrapper">
+                <div class="card student-card" onclick="window.location.href='login.html'">
+                    <div class="card-content">
+                        <h2>STUDENT</h2>
+                        <div class="divider"></div>
+                        <p>Start your laboratory session and record attendance.</p>
+                    </div>
+                </div>
+
+                <div class="card teacher-card" onclick="window.location.href='teacher_login.html'">
+                    <div class="card-content">
+                        <h2>TEACHER</h2>
+                        <div class="divider"></div>
+                        <p>Access dashboard and monitor student logs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="back-btn" onclick="window.location.href='index.html'">BACK TO HOME</button>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+/* SECTION KOTLIN PREMIUM THEME */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('bg-selection.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #2e004f; 
+    
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    color: white;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 80px;
+    position: relative;
+    z-index: 20;
+}
+
+.logo-text {
+    font-weight: 800;
+    letter-spacing: 4px;
+    font-size: 1.4rem;
+    background: linear-gradient(to right, #fff, #ff00ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.nav-links a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    margin-left: 40px;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: white;
+}
+
+/* Layout */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 100px;
+    height: 75vh;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 10; 
+}
+
+.kotlin-badge {
+    background: rgba(138, 43, 226, 0.2);
+    border: 1px solid rgba(138, 43, 226, 0.5);
+    padding: 6px 20px;
+    border-radius: 50px;
+    letter-spacing: 4px;
+    font-size: 0.75rem;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.main-title {
+    font-size: 6rem;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.pink-text {
+    color: #ff00ff;
+    text-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
+.sub-title {
+    font-size: 1.5rem;
+    opacity: 0.8;
+    margin: 20px 0 40px 0;
+    line-height: 1.4;
+}
+
+/* SELECTION BUTTON */
+.selection-btn {
+    background: white;
+    color: #1a0033;
+    text-decoration: none;
+    padding: 10px 10px 10px 30px;
+    border-radius: 60px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 700;
+    gap: 20px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 11; 
+}
+
+.arrow-circle {
+    background: #1a0033;
+    color: white;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.selection-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+/* Mascot Area */
+.mascot-area {
+    position: relative;
+}
+
+.glow-effect {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+.robot-img {
+    max-width: 1000px;
+    height: 100%;
+    filter: drop-shadow(0 20px 50px rgba(255, 0, 255, 0.5));
+    animation: float 4s ease-in-out infinite;
+    position: relative; 
+    right: 250px; 
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}

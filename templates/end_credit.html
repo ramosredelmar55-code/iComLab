@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iComlab - End Credit</title>
+    <style>
+        /* Reset basic styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* --- BACKGROUND IMAGE --- */
+            background-image: url('bg-selection.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-wrapper {
+            height: 100%;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.2); /* Slight tint for readability */
+        }
+
+        /* --- NAVIGATION BAR --- */
+        .navbar {
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 40px 60px;
+            z-index: 100;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover { opacity: 1; }
+
+        .nav-links a.active {
+            opacity: 1;
+            border-bottom: 2px solid white;
+            padding-bottom: 5px;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .credit-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding-left: 10%;
+            width: 100%;
+            position: relative;
+        }
+
+        /* --- LEFT SIDE (Text) --- */
+        .text-side {
+            z-index: 10;
+            max-width: 50%;
+        }
+
+        .kotlin-tag {
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .thank-you-box h1 {
+            font-size: 5.5rem;
+            line-height: 0.95;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0;
+            font-family: 'Arial Black', 'Impact', sans-serif;
+        }
+
+        /* Solid Text */
+        .thank-you-box h1:not(.outline-text) {
+            color: white;
+        }
+
+        /* Outlined Text */
+        .outline-text {
+            color: transparent;
+            -webkit-text-stroke: 2px white;
+            display: block;
+        }
+
+        /* BACK BUTTON */
+        .back-btn {
+            display: inline-block;
+            margin-top: 40px;
+            padding: 15px 35px;
+            background: white;
+            color: black;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: transform 0.2s;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- RIGHT SIDE (Robot Image) --- */
+        .image-side {
+            position: absolute;
+            right: 5%; /* Positioned to the right */
+            height: 85vh;
+            bottom: 0;
+            display: flex;
+            align-items: flex-end;
+            pointer-events: none;
+        }
+
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .image-side img {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 0 60px rgba(160, 32, 240, 0.6));
+            animation: float 4s ease-in-out infinite; /* Added Animation */
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .thank-you-box h1 { font-size: 3.5rem; }
+            .image-side { right: -10%; opacity: 0.5; }
+            .credit-container { padding-left: 5%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        <nav class="navbar">
+            <div class="nav-links">
+                <a href="login.html">Log In</a>
+                <a href="logout.html">Log out</a>
+                <a href="end_credit.html" class="active">End Credit</a>
+            </div>
+        </nav>
+
+        <main class="credit-container">
+            <div class="text-side">
+                <div class="thank-you-box">
+                    <h1>THANK YOU<br>FOR</h1>
+                    <h1 class="outline-text">USING<br>ICOMLAB</h1>
+                </div>
+                <a href="index.html" class="back-btn">BACK TO HOME</a>
+            </div>
+
+            <div class="image-side">
+                <img src="mascot_end.jpg" alt="Mascot Character">
+            </div>
+        </main>
+    </div>
+</body>
+</html>

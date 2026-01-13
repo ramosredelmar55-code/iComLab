@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iComlab - Teacher Dashboard</title>
+    <style>
+        :root {
+            --accent-purple: #9d4edd;
+            --glass-bg: rgba(0, 0, 0, 0.4);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --danger-color: #ff4d4d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            color: var(--text-color);
+            
+            /* --- BACKGROUND --- */
+            background-image: url('bg-selection.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        /* --- NAVBAR --- */
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand { font-size: 1.5rem; font-weight: 800; letter-spacing: 1px; }
+        .brand span { color: var(--accent-purple); }
+        .nav-links { display: flex; gap: 10px; }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .nav-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+        .nav-btn.active {
+            background: var(--accent-purple);
+            color: white;
+            box-shadow: 0 4px 15px rgba(157, 78, 237, 0.3);
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: 0.3s;
+        }
+        .logout-btn:hover { background: rgba(255, 40, 40, 0.2); border-color: #ff4d4d; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { padding: 40px; max-width: 1200px; margin: 0 auto; }
+        .content-section { display: none; animation: fadeIn 0.4s ease; }
+        .content-section.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: var(--glass-border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h2 { margin: 0; font-size: 1.8rem; }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            width: 250px;
+        }
+        .search-bar:focus { border-color: var(--accent-purple); }
+
+        /* --- TABLE --- */
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            text-align: left;
+            padding: 15px;
+            color: var(--text-muted);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        td { padding: 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); vertical-align: middle; }
+        tr:hover td { background: rgba(255, 255, 255, 0.03); }
+
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; }
+        .badge.success { background: rgba(0, 255, 128, 0.2); color: #00ff80; }
+        .badge.warning { background: rgba(255, 200, 0, 0.2); color: #ffc800; }
+        .badge.timeout { background: rgba(255, 80, 80, 0.2); color: #ff5050; }
+        .badge.logged-out { background: rgba(150, 150, 150, 0.2); color: #ccc; }
+
+        /* --- TIMER STYLE --- */
+        .timer-display { font-family: 'Courier New', monospace; font-weight: bold; letter-spacing: 1px; color: #00ff80; }
+        .timer-warning { color: #ffc800; animation: pulse 2s infinite; }
+        .timer-expired { color: #ff5050; }
+        .timer-done { color: #666; font-size: 0.85rem; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+        /* --- ACTION BUTTON --- */
+        .btn-end-session {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid var(--danger-color);
+            color: var(--danger-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-end-session:hover { background: var(--danger-color); color: white; }
+
+        /* --- STATS GRID --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .stat-box { text-align: center; transition: 0.3s; position: relative; cursor: pointer; }
+        .stat-box:hover { transform: translateY(-5px); background: rgba(0, 0, 0, 0.6); }
+        .stat-icon { font-size: 2.5rem; margin-bottom: 10px; }
+        .stat-box h3 { font-size: 3rem; margin: 10px 0; color: white; }
+        .stat-box p { color: var(--text-muted); margin: 0; font-size: 1.1rem; }
+        .sub-text { display: block; margin-top: 15px; font-size: 0.8rem; color: var(--accent-purple); font-weight: bold; }
+        .status-indicator { width: 12px; height: 12px; border-radius: 50%; position: absolute; top: 20px; right: 20px; }
+        .active-dot { background: #00ff80; box-shadow: 0 0 10px #00ff80; }
+        .inactive-dot { background: #555; }
+
+        /* --- NOTIFICATION BOX --- */
+        .notif-box {
+            position: fixed; top: -120px; right: 30px;
+            background-color: #1a0033; color: white;
+            padding: 20px 30px; border-radius: 12px;
+            border-left: 6px solid var(--accent-purple);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: top 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+        }
+        .notif-box.show { top: 30px; }
+        .notif-content { display: flex; align-items: center; gap: 18px; }
+        .notif-icon {
+            background: var(--accent-purple); color: white;
+            border-radius: 50%; width: 28px; height: 28px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; flex-shrink: 0;
+        }
+        .close-notif { background: none; border: none; color: rgba(255, 255, 255, 0.4); font-size: 24px; cursor: pointer; padding: 0; margin-left: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <header class="nav-container">
+        <div class="brand">iComlab <span>Teacher Admin</span></div>
+        <nav class="nav-links">
+            <button id="btn-history" class="nav-btn active" onclick="showSection('history')">HISTORY</button>
+            <button id="btn-stats" class="nav-btn" onclick="showSection('stats')">STATS</button>
+            <button id="btn-print" class="nav-btn" onclick="showSection('print')">PRINT</button>
+        </nav>
+        <button class="logout-btn" onclick="window.location.href='selection.html'">LOGOUT</button>
+    </header>
+
+    <main class="main-content">
+        
+        <section id="history" class="content-section active">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Usage History</h2>
+                    <input type="text" id="logSearch" placeholder="Search..." class="search-bar" onkeyup="filterLogs()">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Section</th>
+                            <th>PC No.</th>
+                            <th>Time Log</th> <th>Time Left</th>
+                            <th>Status</th>
+                            <th>Action</th> </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="stats" class="content-section">
+            <div class="stats-grid">
+                <div class="card stat-box" onclick="showSection('history')">
+                    <div id="dot" class="status-indicator inactive-dot"></div> 
+                    <div class="stat-icon">🖥️</div>
+                    <h3 id="online-count">0</h3>
+                    <p>Active PCs</p>
+                    <span class="sub-text">Currently Active</span>
+                </div>
+                
+                <div class="card stat-box" onclick="showSection('history')">
+                    <div class="stat-icon">👥</div>
+                    <h3 id="visit-count">0</h3>
+                    <p>Total Visits</p>
+                    <span class="sub-text">Today's Traffic</span>
+                </div>
+            </div>
+            
+            <center>
+                <button onclick="clearDatabaseLogs()" style="margin-top: 40px; background: transparent; color: #ff4d4d; border: 1px solid #ff4d4d; padding: 12px 25px; border-radius: 8px; cursor: pointer; transition: 0.3s; opacity: 0.8;">
+                    Clear All Laboratory Logs
+                </button>
+            </center>
+        </section>
+
+        <section id="print" class="content-section">
+            <div class="card print-card" style="text-align: center; padding: 60px;">
+                <div class="print-icon" style="font-size: 60px; margin-bottom: 20px;">📄</div>
+                <h2>Generate Report</h2>
+                <p style="color: rgba(255,255,255,0.7); max-width: 400px; margin: 10px auto 30px auto;">
+                    Export current laboratory usage data into a clean, purple-themed print format.
+                </p>
+                <button class="print-btn" onclick="openPrintView()" style="background: var(--accent-purple); color: white; border: none; padding: 15px 35px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 5px 20px rgba(157, 78, 237, 0.4); transition: 0.3s;">
+                    OPEN PRINT PREVIEW
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="notifBox" class="notif-box">
+        <div class="notif-content">
+            <span id="notifIcon" class="notif-icon">✔</span>
+            <div>
+                <strong id="notifTitle" style="display: block; font-size: 0.9rem; opacity: 0.7;">System</strong>
+                <p id="notifMessage" style="margin: 0; font-size: 1rem; font-weight: 500;">Success Message Here</p>
+            </div>
+            <button class="close-notif" onclick="closeNotif()">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('btn-' + sectionId).classList.add('active');
+            if(sectionId === 'history' || sectionId === 'stats') syncDashboardData();
+        }
+
+        // Helper for Countdown Logic
+        function parseTimeString(timeStr) {
+            const date = new Date();
+            const [time, modifier] = timeStr.split(' ');
+            let [hours, minutes, seconds] = time.split(':');
+            if (hours === '12') hours = '00';
+            if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
+            date.setHours(hours, minutes, seconds || 0);
+            return date;
+        }
+
+        // --- NEW: Sync with Python Backend ---
+        async function syncDashboardData() {
+            try {
+                // Fetch data from Flask API
+                const response = await fetch('/api/logs');
+                const history = await response.json();
+
+                const tableBody = document.getElementById('history-table-body');
+                const onlineCount = document.getElementById('online-count');
+                const visitCount = document.getElementById('visit-count');
+                const dot = document.getElementById('dot');
+
+                tableBody.innerHTML = '';
+                visitCount.innerText = history.length;
+                
+                const activeCount = history.filter(item => item.status === "Active").length;
+                onlineCount.innerText = activeCount;
+                activeCount > 0 ? dot.classList.replace('inactive-dot', 'active-dot') : dot.classList.replace('active-dot', 'inactive-dot');
+
+                if (history.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 50px; opacity: 0.5;">No Logs Found</td></tr>';
+                    return;
+                }
+
+                history.forEach(item => {
+                    let badgeClass = 'warning';
+                    let timerHtml = '<span class="timer-done">--:--:--</span>';
+                    let actionHtml = '<span style="color:#555; font-size:0.8rem;">Closed</span>';
+                    let timeDisplay = `<div>${item.timeIn}</div>`;
+
+                    if (item.status === 'Active') {
+                        badgeClass = 'success';
+                        // Add data-start attribute for the timer JS
+                        timerHtml = `<span class="timer-display" data-start="${item.timeIn}">Calculating...</span>`;
+                        // API Call for logout
+                        actionHtml = `<button onclick="forceLogout('${item.id}')" class="btn-end-session">End Session</button>`;
+                    } else {
+                        // Display TimeOut if available
+                        if(item.timeOut) {
+                            timeDisplay += `<div style="font-size:0.85em; opacity:0.7; margin-top:4px; color:#ff9999;">⬇ ${item.timeOut}</div>`;
+                        }
+                        
+                        if (item.status === 'Timeout') {
+                            badgeClass = 'timeout';
+                            timerHtml = '<span class="timer-expired">Expired</span>';
+                        } else {
+                            badgeClass = 'logged-out';
+                            timerHtml = '<span class="timer-done">Done</span>';
+                        }
+                    }
+
+                    const row = `
+                        <tr>
+                            <td>${item.id}</td>
+                            <td>${item.section || '---'}</td>
+                            <td>PC-${item.pc}</td>
+                            <td>${timeDisplay}</td>
+                            <td>${timerHtml}</td>
+                            <td><span class="badge ${badgeClass}">${item.status}</span></td>
+                            <td>${actionHtml}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+                
+                // Trigger visual update for timers
+                updateLiveTimers();
+
+            } catch (error) {
+                console.error("Failed to fetch logs:", error);
+            }
+        }
+
+        // --- NEW: Force Logout via API ---
+        async function forceLogout(id) {
+            if(confirm(`End session for Student ID: ${id}?`)) {
+                try {
+                    const response = await fetch('/api/force_logout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    });
+                    
+                    const result = await response.json();
+                    if(response.ok) {
+                        showNotification("Updated", `Student ${id} logged out.`);
+                        syncDashboardData(); // Refresh table
+                    } else {
+                        showNotification("Error", result.message, true);
+                    }
+                } catch (error) {
+                    console.error("API Error", error);
+                    showNotification("Error", "Connection failed", true);
+                }
+            }
+        }
+
+        // --- Timer Visual Logic (Frontend Only) ---
+        function updateLiveTimers() {
+            const timers = document.querySelectorAll('.timer-display');
+            const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+            const now = new Date();
+
+            timers.forEach(timer => {
+                const startTimeStr = timer.getAttribute('data-start');
+                if(!startTimeStr) return;
+
+                const startTime = parseTimeString(startTimeStr);
+                const diff = (startTime.getTime() + TWO_HOURS_MS) - now;
+
+                if (diff <= 0) {
+                    timer.innerText = "00:00:00";
+                    timer.className = "timer-display timer-expired";
+                } else {
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    const formatted = (hours < 10 ? "0"+hours : hours) + ":" + (minutes < 10 ? "0"+minutes : minutes) + ":" + (seconds < 10 ? "0"+seconds : seconds);
+                    
+                    timer.innerText = formatted;
+                    timer.className = (diff < 900000) ? "timer-display timer-warning" : "timer-display";
+                }
+            });
+        }
+
+        function filterLogs() {
+            const input = document.getElementById('logSearch').value.toUpperCase();
+            const rows = document.querySelectorAll('#history-table-body tr');
+            rows.forEach(row => {
+                const text = row.textContent.toUpperCase();
+                row.style.display = text.includes(input) ? "" : "none";
+            });
+        }
+
+        function openPrintView() { window.open('print.html', '_blank'); }
+
+        function showNotification(title, message, isError = false) {
+            const notif = document.getElementById('notifBox');
+            document.getElementById('notifTitle').innerText = title;
+            document.getElementById('notifMessage').innerText = message;
+            const icon = document.getElementById('notifIcon');
+            notif.style.borderLeftColor = isError ? "#ff4444" : "#9d4edd";
+            icon.style.backgroundColor = isError ? "#ff4444" : "#9d4edd";
+            icon.innerText = isError ? "!" : "✔";
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 4000);
+        }
+        function closeNotif() { document.getElementById('notifBox').classList.remove('show'); }
+
+        // --- NEW FUNCTION: CLEAR / ARCHIVE LOGS ---
+        async function clearDatabaseLogs() {
+            // Confirm with the user first
+            if (!confirm("⚠️ WARNING: This will archive all current logs from the dashboard.\n\nThey will still be available in the PRINT report.\n\nAre you sure?")) {
+                return;
+            }
+
+            try {
+                // Send request to Python backend
+                const response = await fetch('/api/clear_logs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification("Success", "Dashboard logs archived.");
+                    
+                    // Immediately clear visual data
+                    document.getElementById('history-table-body').innerHTML = '';
+                    document.getElementById('visit-count').innerText = '0';
+                    document.getElementById('online-count').innerText = '0';
+                    document.getElementById('dot').className = 'status-indicator inactive-dot';
+                    
+                    // Double check by syncing
+                    syncDashboardData();
+                } else {
+                    showNotification("Error", result.message || "Server error", true);
+                }
+            } catch (error) {
+                console.error("Clear error:", error);
+                showNotification("Error", "Connection failed.", true);
+            }
+        }
+
+        setInterval(updateLiveTimers, 1000);
+        setInterval(syncDashboardData, 30000); // Poll server every 30 seconds
+        window.onload = syncDashboardData;
+    </script>
+</body>
+</html>

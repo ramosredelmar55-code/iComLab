@@ -1,0 +1,151 @@
+/* Core Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top right, #2e004f, #10002b);
+    background-attachment: fixed;
+    color: #fff;
+    min-height: 100vh;
+}
+
+/* Navigation */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand { font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; }
+.brand span { color: #9d4edd; }
+
+.nav-links .nav-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.nav-links .nav-btn.active {
+    color: #fff;
+    border-bottom: 2px solid #7b2cbf;
+}
+
+.logout-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.logout-btn:hover { background: rgba(255, 0, 0, 0.3); }
+
+/* Main Content Layout */
+.main-content { padding: 40px 50px; }
+
+.content-section {
+    display: none;
+    animation: slideUp 0.4s ease-out;
+}
+
+.content-section.active { display: block; }
+
+/* Dashboard Cards */
+.card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 25px;
+    backdrop-filter: blur(10px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 15px;
+    border-radius: 8px;
+    color: white;
+    outline: none;
+}
+
+/* Stats Styling */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.stat-box { text-align: center; position: relative; }
+.stat-icon { font-size: 3rem; margin-bottom: 10px; opacity: 0.7; }
+.stat-box h3 { font-size: 3.5rem; margin: 10px 0; color: #fff; }
+.sub-text { color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; text-transform: uppercase; }
+
+/* Online Indicator */
+.status-indicator {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.status-indicator.inactive { background: #555; box-shadow: none; }
+.status-indicator.active {
+    background: #00ff88;
+    box-shadow: 0 0 15px #00ff88;
+    animation: pulse 2s infinite;
+}
+
+/* Table Styling */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; color: #9d4edd; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 0.85rem; text-transform: uppercase; }
+td { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.95rem; }
+
+/* Print Card */
+.print-card { text-align: center; padding: 80px 40px; }
+.print-btn {
+    background: #7b2cbf;
+    color: white;
+    border: none;
+    padding: 15px 45px;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: 0.3s;
+}
+.print-btn:hover { background: #9d4edd; transform: scale(1.05); }
+
+/* Animations */
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media print {
+    .nav-container, .print-btn, .search-bar { display: none; }
+    body { background: white; color: black; }
+    .card { border: 1px solid #ccc; background: none; box-shadow: none; }
+}
